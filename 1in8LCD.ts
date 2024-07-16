@@ -95,12 +95,21 @@ pins.spiFormat(8, 0)
 pins.spiFrequency(80000000)
 
 //% weight=20 color=#436EEE icon="\uf108"
+//% groups=['Initialise', 'Settings', 'Drawing', 'Colours', 'Old']
 namespace LCD1IN8 {
 
+    let defaultLocation: LOCATION = LOCATION.SCREEN
+
     //% block="initialise LCD"
-    //% weight=500
+    //% group='Initialise'
     export function initialise(): void {
         LCD_Init()
+    }
+
+    //% block="set default draw location to $location"
+    //% group='Settings'
+    export function setDefaultLocation(location: LOCATION): void {
+        defaultLocation = location
     }
 
     //% block="draw pixel x $x y $y colour $colour||to $location"
@@ -109,18 +118,20 @@ namespace LCD1IN8 {
     //% colour.min=0 colour.max=65535
     //% inlineInputMode=inline
     //% expandableArgumentMode=toggle
-    //% weight=490
+    //% group='Drawing'
     export function drawPixel(x: number, y: number, colour: number, location?: LOCATION): void {
-        if (location == LOCATION.SCREEN) {
-            DirectDrawPoint(x + 1, y + 1, colour, DOT_PIXEL.DOT_PIXEL_1)
-        } else {
-            DrawPoint(x + 1, y + 1, colour, DOT_PIXEL.DOT_PIXEL_1)
-        }
+        if (location === undefined)
+            location = defaultLocation
+        if (location == LOCATION.SCREEN || location == LOCATION.SCREEN_MEMORY)
+            LCD_DirectSetPoint(x + 1, y + 1, colour)
+        if (location == LOCATION.MEMORY || location == LOCATION.SCREEN_MEMORY)
+            LCD_SetPoint(x + 1, y + 1, colour)
     }
 
     //% blockId=LCD_Init
     //% blockGap=8
     //% block="LCD1IN8 Init"
+    //% group='Old'
     //% weight=200
     export function LCD_Init(): void {
         pins.digitalWritePin(DigitalPin.P8, 1);
