@@ -123,9 +123,9 @@ namespace LCD1IN8 {
         if (location === undefined)
             location = defaultLocation
         if (location == LOCATION.SCREEN || location == LOCATION.SCREEN_MEMORY)
-            LCD_DirectSetPoint(x + 1, y + 1, colour)
+            LCD_DirectSetPoint(x, y, colour)
         if (location == LOCATION.MEMORY || location == LOCATION.SCREEN_MEMORY)
-            LCD_SetPoint(x + 1, y + 1, colour)
+            LCD_SetPoint(x, y, colour)
     }
 
     //% blockId=LCD_Init
